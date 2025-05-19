@@ -14,7 +14,7 @@ app.get('/', (req, res) => res.send(`
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NODOO | iOS Style</title>
+  <title>NODOO | To Do List App</title>
   <style>
     :root {
       --system-blue: #007AFF;
@@ -203,4 +203,4 @@ app.post('/delete-all', (req, res) => {
   res.sendStatus(200);
 });
 
-app.listen(3000, () => console.log('iOS-style app running on http://localhost:3000'));
+app.listen(3000, () => console.log('NODOO app running on http://localhost:3000'));
