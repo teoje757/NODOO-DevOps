@@ -6,7 +6,12 @@ app.get('/', (req, res) => {
   res.send('NODOO To-Do App');     // Send text response
 });
 
-// Start the server on port 3000
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
-});
+// Only start the server if this file is run directly
+if (require.main === module) {
+  app.listen(3000, () => {
+    console.log('Server running on port 3000');
+  });
+}
+
+// Add this line at the end of server.js
+module.exports = app;
