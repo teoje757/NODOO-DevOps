@@ -13,7 +13,7 @@ describe('NODOO App API', () => {
   it('GET / should return HTML with app header', async () => {
     const res = await request(app).get('/');
     expect(res.statusCode).toBe(200);
-    expect(res.text).toContain('NODOO - Note and Do'); // Check header in HTML
+    expect(res.text).toContain('NODOO | To Do List App'); // Check header in HTML
   });
 
   // Test: POST /add
