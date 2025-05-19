@@ -1,15 +1,19 @@
 # Base image
-FROM node:18-alpine
+FROM node:24-alpine
 
 # Working directory inside container
 WORKDIR /app
 
-# Install dependencies
+# Install dependencies first
 COPY package*.json ./
 RUN npm install
 
-# Copy app code
+
+# Copy all source code
 COPY . .
+
+# Run tests
+RUN npm test
 
 # Expose port
 EXPOSE 3000
