@@ -2,19 +2,29 @@ pipeline {
     agent any
     
     stages {
-        stage('Setup Node.js') {
+        stage('Setup Environment') {
             steps {
                 script {
-                    // Install Node.js if not present
-                    def nodeExists = sh(script: 'command -v node', returnStatus: true) == 0
-                    if (!nodeExists) {
+                    // Install Node.js if needed
+                    if (sh(script: 'command -v node', returnStatus: true) != 0) {
                         sh '''
                             curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
                             sudo apt-get install -y nodejs
                         '''
                     }
+                    
+                    // Install Docker if needed
+                    if (sh(script: 'command -v docker', returnStatus: true) != 0) {
+                        sh '''
+                            sudo apt-get update
+                            sudo apt-get install -y docker.io
+                            sudo usermod -aG docker jenkins
+                            sudo systemctl restart docker
+                        '''
+                    }
+                    
                     // Verify installations
-                    sh 'node -v && npm -v'
+                    sh 'node -v && npm -v && docker --version'
                 }
             }
         }
@@ -27,14 +37,16 @@ pipeline {
         
         stage('Test') {
             steps {
-                sh 'npm test || true'  // Temporary bypass for missing tests
+                sh 'npm test || true'  // Temporary bypass for tests
             }
         }
         
         stage('Deploy') {
             steps {
-                sh 'docker build -t nodoo .'
-                sh 'docker run -d -p 3000:3000 nodoo'
+                sh '''
+                    docker build -t nodoo .
+                    docker run -d -p 3000:3000 nodoo
+                '''
             }
         }
     }

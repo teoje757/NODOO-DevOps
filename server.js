@@ -1,13 +1,15 @@
 const express = require('express');
 const app = express();
 
-// Middleware
+// Enable form data and JSON body parsing
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json()); // For API endpoints
+app.use(express.json()); // For handling JSON in API calls
 
+// In-memory task list
 let tasks = [];
+app.locals.tasks = tasks; // Make tasks accessible for tests
 
-// iOS-inspired UI
+// Route: GET /
 app.get('/', (req, res) => res.send(`
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +17,7 @@ app.get('/', (req, res) => res.send(`
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NODOO | To Do List App</title>
+  <!-- Inline CSS styles for iOS-style UI -->
   <style>
     :root {
       --system-blue: #007AFF;
@@ -106,13 +109,15 @@ app.get('/', (req, res) => res.send(`
 <body>
   <header>NODOO - Note and Do</header>
   
+  <!-- Task input form -->
   <form class="add-task" action="/add" method="POST">
     <input type="text" name="task" placeholder="New task" required>
     <button type="submit">Add</button>
   </form>
 
+  <!-- Render task list dynamically -->
   <div class="task-list">
-    ${tasks.map((task, index) => `
+    ${app.locals.tasks.map((task, index) => `
       <div class="task-item">
         <input 
           type="checkbox" 
@@ -131,7 +136,8 @@ app.get('/', (req, res) => res.send(`
     `).join('')}
   </div>
 
-  ${tasks.length > 0 ? `
+  <!-- Bulk action buttons -->
+  ${app.locals.tasks.length > 0 ? `
     <div class="bulk-actions">
       <button class="bulk-btn" onclick="clearCompleted()">
         Clear Completed
@@ -142,8 +148,8 @@ app.get('/', (req, res) => res.send(`
     </div>
   ` : ''}
 
+  <!-- Client-side JavaScript for interacting with API -->
   <script>
-    // Client-side functions
     function toggleTask(index) {
       fetch('/toggle', {
         method: 'POST',
@@ -176,37 +182,43 @@ app.get('/', (req, res) => res.send(`
 </html>
 `));
 
-// API Endpoints
+// Endpoint: Add a new task
 app.post('/add', (req, res) => {
-  tasks.push({ text: req.body.task, completed: false });
+  app.locals.tasks.push({ text: req.body.task, completed: false });
   res.redirect('/');
 });
 
+// Endpoint: Toggle task completion
 app.post('/toggle', (req, res) => {
   const { index } = req.body;
-  if (tasks[index]) tasks[index].completed = !tasks[index].completed;
+  if (app.locals.tasks[index]) {
+    app.locals.tasks[index].completed = !app.locals.tasks[index].completed;
+  }
   res.sendStatus(200);
 });
 
+// Endpoint: Delete a task by index
 app.post('/delete', (req, res) => {
-  tasks.splice(req.body.index, 1);
+  app.locals.tasks.splice(req.body.index, 1);
   res.sendStatus(200);
 });
 
+// Endpoint: Remove all completed tasks
 app.post('/clear-completed', (req, res) => {
-  tasks = tasks.filter(task => !task.completed);
+  app.locals.tasks = app.locals.tasks.filter(task => !task.completed);
   res.sendStatus(200);
 });
 
+// Endpoint: Remove all tasks
 app.post('/delete-all', (req, res) => {
-  tasks = [];
+  app.locals.tasks = [];
   res.sendStatus(200);
 });
 
-// Export the app for testing
+// Export app for test scripts
 module.exports = app;
 
-// Only start the server if this file is run directly
+// Start the server only when run directly (not when imported)
 if (require.main === module) {
   app.listen(3000, () => console.log('NODOO app running on http://localhost:3000'));
 }
