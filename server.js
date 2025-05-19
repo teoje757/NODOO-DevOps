@@ -1,13 +1,59 @@
 const express = require('express');
+const promClient = require('prom-client');
+
 const app = express();
 
+// ===== Prometheus Metrics Setup =====
+// Enable default metrics (CPU, memory, etc.)
+promClient.collectDefaultMetrics({ timeout: 5000 });
+
+// Create custom metrics
+const httpRequestCounter = new promClient.Counter({
+  name: 'http_requests_total',
+  help: 'Total HTTP requests',
+  labelNames: ['method', 'endpoint', 'status']
+});
+
+const activeTasksGauge = new promClient.Gauge({
+  name: 'nodoo_active_tasks',
+  help: 'Current number of tasks in the list'
+});
+
+const completedTasksGauge = new promClient.Gauge({
+  name: 'nodoo_completed_tasks',
+  help: 'Current number of completed tasks'
+});
+
+// Middleware to track requests
+app.use((req, res, next) => {
+  res.on('finish', () => {
+    httpRequestCounter.inc({
+      method: req.method,
+      endpoint: req.path,
+      status: res.statusCode
+    });
+  });
+  next();
+});
+
+// Metrics endpoint
+app.get('/metrics', async (req, res) => {
+  // Update task metrics
+  activeTasksGauge.set(app.locals.tasks.length);
+  completedTasksGauge.set(app.locals.tasks.filter(t => t.completed).length);
+  
+  res.set('Content-Type', promClient.register.contentType);
+  res.end(await promClient.register.metrics());
+});
+
+// ===== Your Existing App Code =====
 // Enable form data and JSON body parsing
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json()); // For handling JSON in API calls
+app.use(express.json());
 
 // In-memory task list
 let tasks = [];
-app.locals.tasks = tasks; // Make tasks accessible for tests
+app.locals.tasks = tasks;
 
 // Route: GET /
 app.get('/', (req, res) => res.send(`
@@ -17,167 +63,14 @@ app.get('/', (req, res) => res.send(`
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NODOO | To Do List App</title>
-  <!-- Inline CSS styles for iOS-style UI -->
+  <!-- Your existing CSS styles -->
   <style>
-    :root {
-      --system-blue: #007AFF;
-      --system-gray: #F2F2F7;
-      --system-red: #FF3B30;
-    }
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
-    body {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: var(--system-gray);
-    }
-    header {
-      font-size: 28px;
-      font-weight: 600;
-      margin: 20px 0;
-      color: #000;
-    }
-    .add-task {
-      display: flex;
-      margin-bottom: 15px;
-    }
-    .add-task input {
-      flex: 1;
-      padding: 12px 15px;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      background: white;
-    }
-    .add-task button {
-      background: var(--system-blue);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 0 20px;
-      margin-left: 10px;
-      font-size: 16px;
-    }
-    .task-list {
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .task-item {
-      display: flex;
-      align-items: center;
-      padding: 12px 15px;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
-    .task-item:last-child {
-      border-bottom: none;
-    }
-    .task-checkbox {
-      margin-right: 15px;
-      accent-color: var(--system-blue);
-    }
-    .task-text {
-      flex: 1;
-    }
-    .task-text.completed {
-      text-decoration: line-through;
-      color: #888;
-    }
-    .delete-btn {
-      background: none;
-      border: none;
-      color: var(--system-red);
-      font-size: 16px;
-    }
-    .bulk-actions {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 15px;
-    }
-    .bulk-btn {
-      background: var(--system-red);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 15px;
-    }
+    /* ... your existing styles ... */
   </style>
 </head>
 <body>
-  <header>NODOO - Note and Do</header>
-  
-  <!-- Task input form -->
-  <form class="add-task" action="/add" method="POST">
-    <input type="text" name="task" placeholder="New task" required>
-    <button type="submit">Add</button>
-  </form>
-
-  <!-- Render task list dynamically -->
-  <div class="task-list">
-    ${app.locals.tasks.map((task, index) => `
-      <div class="task-item">
-        <input 
-          type="checkbox" 
-          class="task-checkbox" 
-          onchange="toggleTask(${index})"
-          ${task.completed ? 'checked' : ''}
-        >
-        <span class="task-text ${task.completed ? 'completed' : ''}">
-          ${task.text}
-        </span>
-        <button 
-          class="delete-btn"
-          onclick="deleteTask(${index})"
-        >Delete</button>
-      </div>
-    `).join('')}
-  </div>
-
-  <!-- Bulk action buttons -->
-  ${app.locals.tasks.length > 0 ? `
-    <div class="bulk-actions">
-      <button class="bulk-btn" onclick="clearCompleted()">
-        Clear Completed
-      </button>
-      <button class="bulk-btn" onclick="deleteAll()">
-        Delete All
-      </button>
-    </div>
-  ` : ''}
-
-  <!-- Client-side JavaScript for interacting with API -->
-  <script>
-    function toggleTask(index) {
-      fetch('/toggle', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ index })
-      }).then(() => window.location.reload());
-    }
-
-    function deleteTask(index) {
-      fetch('/delete', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ index })
-      }).then(() => window.location.reload());
-    }
-
-    function clearCompleted() {
-      fetch('/clear-completed', {
-        method: 'POST'
-      }).then(() => window.location.reload());
-    }
-
-    function deleteAll() {
-      fetch('/delete-all', {
-        method: 'POST'
-      }).then(() => window.location.reload());
-    }
-  </script>
+  <!-- Your existing HTML template -->
+  ${/* ... your existing template code ... */''}
 </body>
 </html>
 `));
@@ -218,7 +111,7 @@ app.post('/delete-all', (req, res) => {
 // Export app for test scripts
 module.exports = app;
 
-// Start the server only when run directly (not when imported)
+// Start the server only when run directly
 if (require.main === module) {
   app.listen(3000, () => console.log('NODOO app running on http://localhost:3000'));
 }
