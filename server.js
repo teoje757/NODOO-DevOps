@@ -203,4 +203,10 @@ app.post('/delete-all', (req, res) => {
   res.sendStatus(200);
 });
 
-app.listen(3000, () => console.log('NODOO app running on http://localhost:3000'));
+// Export the app for testing
+module.exports = app;
+
+// Only start the server if this file is run directly
+if (require.main === module) {
+  app.listen(3000, () => console.log('NODOO app running on http://localhost:3000'));
+}
