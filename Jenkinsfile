@@ -27,7 +27,7 @@ pipeline {
                     sh 'node -v && npm -v && docker --version'
                 }
             }
-        } //hi
+        } //hiiii
         
         stage('Build') {
             steps {
