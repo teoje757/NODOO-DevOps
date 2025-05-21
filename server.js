@@ -150,6 +150,13 @@ app.get('/', (req, res) => res.send(`
       border-radius: 10px;
       padding: 10px 15px;
     }
+        body {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+  }
   </style>
 </head>
 <body>
