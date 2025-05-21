@@ -16,7 +16,7 @@ COPY . .
 RUN npm test
 
 # Expose port
-EXPOSE 3002
+EXPOSE 3000
 
 # Start app
 CMD ["node", "server.js"]

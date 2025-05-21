@@ -45,7 +45,7 @@ pipeline {
             steps {
                 sh '''
                     docker build -t nodoo .
-                    docker run -d -p 3002:3002 nodoo
+                    docker run -d -p 3000:3000 nodoo
                 '''
             }
         }

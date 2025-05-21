@@ -113,5 +113,5 @@ module.exports = app;
 
 // Start the server only when run directly
 if (require.main === module) {
-  app.listen(3000, () => console.log('NODOO app running on http://localhost:3002'));
+  app.listen(3000, () => console.log('NODOO app running on http://localhost:3000'));
 }
