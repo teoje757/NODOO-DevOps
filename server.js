@@ -186,7 +186,7 @@ app.get('/', (req, res) => res.send(`
   ${app.locals.tasks.length > 0 ? `
     <div class="bulk-actions">
       <button class="bulk-btn" onclick="clearCompleted()">
-        Clear Completed
+        Clear Completed!
       </button>
       <button class="bulk-btn" onclick="deleteAll()">
         Delete All
