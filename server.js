@@ -84,9 +84,9 @@ app.get('/', (req, res) => res.send(`
       font-size: var(--font-size-large);
     }
     header {
-      font-size: 48px !important; /* Huge header */
-  font-weight: 700;
-  margin: 40px 0 !important;
+      font-size: 45px !important; /* Huge header */
+      font-weight: 700;
+      margin: 40px 0 !important;
       margin: 30px 0; 
       color: #000;
     }
@@ -95,24 +95,24 @@ app.get('/', (req, res) => res.send(`
       margin-bottom: 15px;
     }
     .add-task input {
-  flex: 1;
-  padding: 20px 25px !important; /* Bigger input field */
-  border: none;
-  border-radius: 15px;
-  font-size: 24px !important; /* Larger text */
-  background: white;
-}
+      flex: 1;
+      padding: 20px 25px !important; /* Bigger input field */
+      border: none;
+      border-radius: 15px;
+      font-size: 24px !important; /* Larger text */
+      background: white;
+    }
     .add-task button {
-  background: var(--system-blue);
-  color: white;
-  border: none;
-  border-radius: 15px;
-  padding: 0 30px !important;
-  margin-left: 15px;
-  font-size: 24px !important;
-  font-weight: 600;
-  height: 70px; /* Fixed height for consistency */
-}
+      background: var(--system-blue);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      padding: 0 30px !important;
+      margin-left: 15px;
+      font-size: 24px !important;
+      font-weight: 600;
+      height: 70px; /* Fixed height for consistency */
+    }
     .task-list {
       background: white;
       border-radius: 10px;
@@ -122,21 +122,20 @@ app.get('/', (req, res) => res.send(`
       display: flex;
       align-items: center;
       padding: 20px 25px !important; /* Bigger task items */
-  border-bottom: 2px solid rgba(0,0,0,0.05);
+      border-bottom: 2px solid rgba(0,0,0,0.05);
     }
     .task-item:last-child {
       border-bottom: none;
     }
     .task-checkbox {
-  width: 28px !important; /* Bigger checkbox */
-  height: 28px !important;
-  margin-right: 25px !important;
-}
-
-.task-text {
-  flex: 1;
-  font-size: 24px !important; /* Bigger task text */
-}
+      width: 28px !important; /* Bigger checkbox */
+      height: 28px !important;
+      margin-right: 25px !important;
+    }
+    .task-text {
+      flex: 1;
+      font-size: 24px !important; /* Bigger task text */
+    }
     .task-text.completed {
       text-decoration: line-through;
       color: #888;
@@ -154,31 +153,25 @@ app.get('/', (req, res) => res.send(`
       margin-top: 30px !important;
     }
     .bulk-btn {
-    padding: 15px 30px !important; /* Bigger bulk buttons */
-  font-size: 24px !important;
+      padding: 15px 30px !important; /* Bigger bulk buttons */
+      font-size: 24px !important;
       background: var(--system-red);
       color: white;
       border: none;
       border-radius: 10px;
     }
     body {
-    max-width: 555px;
-    margin: 0 auto;
-    padding: 20px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
-  }
+      max-width: 555px;
+      margin: 0 auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
   </style>
 </head>
 <body>
   <header>NODOO - Note and Do</header>
-  <!-- Task Stats Summary -->
-<div style="background: white; border-radius: 10px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-  <strong>📊 Task Stats:</strong><br>
-  Total Tasks: ${app.locals.tasks.length} |
-  Completed: ${app.locals.tasks.filter(t => t.completed).length} |
-  Active: ${app.locals.tasks.filter(t => !t.completed).length}
-</div>
+
 
   <!-- Task input form -->
   <form class="add-task" action="/add" method="POST">
