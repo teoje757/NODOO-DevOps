@@ -161,6 +161,15 @@ app.get('/', (req, res) => res.send(`
 </head>
 <body>
   <header>NODOO - Note and Do</header>
+
+  <!-- Task Stats Summary -->
+<div style="background: white; border-radius: 10px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <strong>📊 Task Stats:</strong><br>
+  Total Tasks: ${app.locals.tasks.length} |
+  Completed: ${app.locals.tasks.filter(t => t.completed).length} |
+  Active: ${app.locals.tasks.filter(t => !t.completed).length}
+</div>
+
   
   <!-- Task input form -->
   <form class="add-task" action="/add" method="POST">
