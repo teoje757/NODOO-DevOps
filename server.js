@@ -81,9 +81,9 @@ app.get('/', (req, res) => res.send(`
       background-color: var(--system-gray);
     }
     header {
-      font-size: 28px;
+      font-size: 36px;
       font-weight: 600;
-      margin: 20px 0;
+      margin: 30px 0; 
       color: #000;
     }
     .add-task {
@@ -93,19 +93,20 @@ app.get('/', (req, res) => res.send(`
     .add-task input {
       flex: 1;
       padding: 12px 15px;
+      padding: 16px 20px; 
+    font-size: 18px; 
       border: none;
       border-radius: 10px;
-      font-size: 16px;
       background: white;
     }
     .add-task button {
       background: var(--system-blue);
       color: white;
       border: none;
+      padding: 0 25px;     /* Increased from 0 20px */
+    font-size: 18px;
       border-radius: 10px;
-      padding: 0 20px;
       margin-left: 10px;
-      font-size: 16px;
     }
     .task-list {
       background: white;
@@ -115,18 +116,20 @@ app.get('/', (req, res) => res.send(`
     .task-item {
       display: flex;
       align-items: center;
-      padding: 12px 15px;
+      padding: 16px 20px;
       border-bottom: 1px solid rgba(0,0,0,0.05);
     }
     .task-item:last-child {
       border-bottom: none;
     }
     .task-checkbox {
-      margin-right: 15px;
+      transform: scale(1.3); 
+    margin-right: 20px;
       accent-color: var(--system-blue);
     }
     .task-text {
       flex: 1;
+      font-size: 18px;
     }
     .task-text.completed {
       text-decoration: line-through;
@@ -136,7 +139,7 @@ app.get('/', (req, res) => res.send(`
       background: none;
       border: none;
       color: var(--system-red);
-      font-size: 16px;
+      font-size: 18px;
     }
     .bulk-actions {
       display: flex;
@@ -144,11 +147,12 @@ app.get('/', (req, res) => res.send(`
       margin-top: 15px;
     }
     .bulk-btn {
+    padding: 12px 20px;   
+    font-size: 18px;
       background: var(--system-red);
       color: white;
       border: none;
       border-radius: 10px;
-      padding: 10px 15px;
     }
         body {
     max-width: 500px;
