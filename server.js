@@ -69,20 +69,24 @@ app.get('/', (req, res) => res.send(`
       --system-blue: #007AFF;
       --system-gray: #F2F2F7;
       --system-red: #FF3B30;
+      --font-size-large: 24px;
     }
     * {
       box-sizing: border-box;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
     body {
-      max-width: 500px;
+      max-width: 800px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 40px;
       background-color: var(--system-gray);
+      min-height: 100vh;
+      font-size: var(--font-size-large);
     }
     header {
-      font-size: 36px;
-      font-weight: 600;
+      font-size: 48px !important; /* Huge header */
+  font-weight: 700;
+  margin: 40px 0 !important;
       margin: 30px 0; 
       color: #000;
     }
@@ -91,23 +95,24 @@ app.get('/', (req, res) => res.send(`
       margin-bottom: 15px;
     }
     .add-task input {
-      flex: 1;
-      padding: 12px 15px;
-      padding: 16px 20px; 
-    font-size: 18px; 
-      border: none;
-      border-radius: 10px;
-      background: white;
-    }
+  flex: 1;
+  padding: 20px 25px !important; /* Bigger input field */
+  border: none;
+  border-radius: 15px;
+  font-size: 24px !important; /* Larger text */
+  background: white;
+}
     .add-task button {
-      background: var(--system-blue);
-      color: white;
-      border: none;
-      padding: 0 25px;     /* Increased from 0 20px */
-    font-size: 18px;
-      border-radius: 10px;
-      margin-left: 10px;
-    }
+  background: var(--system-blue);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 0 30px !important;
+  margin-left: 15px;
+  font-size: 24px !important;
+  font-weight: 600;
+  height: 70px; /* Fixed height for consistency */
+}
     .task-list {
       background: white;
       border-radius: 10px;
@@ -116,21 +121,22 @@ app.get('/', (req, res) => res.send(`
     .task-item {
       display: flex;
       align-items: center;
-      padding: 16px 20px;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
+      padding: 20px 25px !important; /* Bigger task items */
+  border-bottom: 2px solid rgba(0,0,0,0.05);
     }
     .task-item:last-child {
       border-bottom: none;
     }
     .task-checkbox {
-      transform: scale(1.3); 
-    margin-right: 20px;
-      accent-color: var(--system-blue);
-    }
-    .task-text {
-      flex: 1;
-      font-size: 18px;
-    }
+  width: 28px !important; /* Bigger checkbox */
+  height: 28px !important;
+  margin-right: 25px !important;
+}
+
+.task-text {
+  flex: 1;
+  font-size: 24px !important; /* Bigger task text */
+}
     .task-text.completed {
       text-decoration: line-through;
       color: #888;
@@ -139,23 +145,24 @@ app.get('/', (req, res) => res.send(`
       background: none;
       border: none;
       color: var(--system-red);
-      font-size: 18px;
+      font-size: 24px !important; 
+      padding: 10px 20px !important;
     }
     .bulk-actions {
       display: flex;
       justify-content: space-between;
-      margin-top: 15px;
+      margin-top: 30px !important;
     }
     .bulk-btn {
-    padding: 12px 20px;   
-    font-size: 18px;
+    padding: 15px 30px !important; /* Bigger bulk buttons */
+  font-size: 24px !important;
       background: var(--system-red);
       color: white;
       border: none;
       border-radius: 10px;
     }
-        body {
-    max-width: 500px;
+    body {
+    max-width: 555px;
     margin: 0 auto;
     padding: 20px;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
